@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useState } from "react";
-import Router from 'next/router';
+import { setCookie } from "nookies";
+import Router from "next/router";
 import { api } from "../services/api";
 
 type User = {
@@ -38,9 +39,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       const { token, refreshToken, permissions, roles } = response.data;
 
-      //sessionStorage = ao fechar o navegador os dados serão perdidos
-      //localStorage = no next é ruim pois a nossa interface é construída server side e no server side não temos acesso ao objeto window (seria necessário uma adaptação para funcionar)
-      //cookies = é por este motivo que os cookies são mais utilizados no next. Pode ser acessado tanto pelo browser quando pelo servidor 
+      setCookie(undefined, 'nextauth.token', token, {
+        maxAge: 60 * 60 * 24 * 30, //30 days
+        path: '/'
+      });
+
+      setCookie(undefined, 'nextauth.refreshToken', refreshToken, {
+        maxAge: 60 * 60 * 24 * 30, //30 days
+        path: '/'
+      });
 
       setUser({
         email,
