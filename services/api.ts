@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { parseCookies, setCookie } from 'nookies';
+import { signOut } from '../context/AuthContext';
 
 interface AxiosErrorResponse {
   code?: string;
@@ -75,7 +76,9 @@ api.interceptors.response.use(response => {
       });
 
     } else {
-
+      signOut();
     }
   }
+
+  return Promise.reject(error);
 });
