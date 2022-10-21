@@ -7,7 +7,7 @@ import styles from '../styles/Home.module.css';
 import { withSSRGuest } from "../utils/withSSRGuest";
 
 const Home: NextPage = () => {
-  const { signIn } = useContext(AuthContext);
+  const { signIn, authChannel } = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,6 +21,7 @@ const Home: NextPage = () => {
     }
 
     await signIn(data);
+    authChannel?.postMessage('signIn');
   };
 
   return (
