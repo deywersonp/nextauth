@@ -53,12 +53,17 @@ export function setupAPIClient(ctx = undefined) {
               path: '/'
             });
 
-            if (typeof window !== 'undefined') {
-              signOut();
-            }
+            failedRequestsQueue.forEach(request => request.onSuccess(token));
+            failedRequestsQueue = [];
           }).catch(err => {
             failedRequestsQueue.forEach(request => request.onFailure(err));
             failedRequestsQueue = [];
+
+            if (typeof window !== 'undefined') {
+              signOut();
+            } else {
+              return Promise.reject(err)
+            }
           }).finally(() => {
             isRefreshing = false;
           })
